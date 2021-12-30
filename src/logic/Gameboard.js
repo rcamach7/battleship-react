@@ -117,7 +117,7 @@ const Player = (playerName) => {
 	};
 };
 
-const computerAI = () => {
+const ComputerAI = () => {
 	const myBoard = BattleShip();
 
 	const moveHistory = [];
@@ -147,6 +147,7 @@ const computerAI = () => {
 	};
 };
 
+export { BattleShip, Ship, Player, ComputerAI };
 // Testing Data
 // const elonMusk = computerAI();
 // const yoshiro = Ship("Carrier", 6);
@@ -170,5 +171,3 @@ const computerAI = () => {
 // tito.myBoard.receiveAttack(elonMusk.generateAttack());
 // tito.myBoard.receiveAttack(elonMusk.generateAttack());
 // console.log(tito.myBoard.printPlayerBoard());
-
-// export default BattleShip;
