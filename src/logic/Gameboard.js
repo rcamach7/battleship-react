@@ -1,4 +1,4 @@
-const BattleShip = (() => {
+const BattleShip = () => {
 	// null === no battleship present and hasn't been fired upon by enemy
 	// -1 === shot by enemy but no battleship was hit
 	const playerBoard = [
@@ -27,9 +27,11 @@ const BattleShip = (() => {
 		}
 	};
 
-	const receiveAttack = (x, y) => {
+	const receiveAttack = (coordinate) => {
+		let x = coordinate[0];
+		let y = coordinate[1];
 		// no ship is present in this location so we will mark this as shot at (-1)
-		if (playerBoard[x][y] === null) {
+		if (playerBoard[x][y] === null || playerBoard[x][y] === -1) {
 			playerBoard[x][y] = -1;
 		} else {
 			// Ship exists and now we will send hit coordinates for ship to analyze hit location.
@@ -52,36 +54,20 @@ const BattleShip = (() => {
 		return true;
 	};
 
-	const printPlayerBoard = () => console.table(playerBoard);
-
-	// Tester Function
-	const testShips = () => {
-		// Create ship and place in specific spot and print board
-		const carrier = Ship("Carrier", 6);
-		placeShip(carrier, 0, 4);
-
-		// Shoot at an empty spot in the board and print board
-		receiveAttack(0, 0);
-		receiveAttack(2, 5);
-
-		// Shoot directly at ship and print board (right at beginning of ship)
-		receiveAttack(0, 4);
-		receiveAttack(0, 5);
-		receiveAttack(0, 6);
-		receiveAttack(0, 7);
-		receiveAttack(0, 8);
-		receiveAttack(0, 9);
-
-		console.log(areShipsSunk());
+	const printShipStatus = (coordinate) => {
+		console.table(playerBoard[coordinate[0]][coordinate[1]].status);
 	};
+
+	const printPlayerBoard = () => console.table(playerBoard);
 
 	return {
 		placeShip,
-		testShips,
 		printPlayerBoard,
 		areShipsSunk,
+		receiveAttack,
+		printShipStatus,
 	};
-})();
+};
 
 const Ship = (type, size) => {
 	// 1 indicates not hit
@@ -122,4 +108,67 @@ const Ship = (type, size) => {
 	};
 };
 
-export default BattleShip;
+const Player = (playerName) => {
+	const myBoard = BattleShip();
+
+	return {
+		playerName,
+		myBoard,
+	};
+};
+
+const computerAI = () => {
+	const myBoard = BattleShip();
+
+	const moveHistory = [];
+
+	// Will return a coordinate for attack into the enemy board
+	const generateAttack = (enemyBoard) => {
+		let x = Math.floor(Math.random() * 10);
+		let y = Math.floor(Math.random() * 10);
+
+		for (let i = 0; i < moveHistory.length; i++) {
+			if (moveHistory[i][0] === x && moveHistory[i][1] === y) {
+				x = Math.floor(Math.random() * 10);
+				y = Math.floor(Math.random() * 10);
+
+				i = 0;
+			}
+		}
+
+		moveHistory.push([x, y]);
+		return [x, y];
+	};
+
+	return {
+		myBoard,
+		moveHistory,
+		generateAttack,
+	};
+};
+
+// Testing Data
+// const elonMusk = computerAI();
+// const yoshiro = Ship("Carrier", 6);
+// elonMusk.myBoard.placeShip(yoshiro, 0, 0);
+// // console.table(elonMusk.myBoard.printPlayerBoard());
+
+// const tito = Player("tito");
+// const yorkTown = Ship("Carrier", 6);
+// tito.myBoard.placeShip(yorkTown, 9, 0);
+
+// tito.myBoard.receiveAttack([9, 0]);
+// tito.myBoard.receiveAttack([9, 1]);
+// tito.myBoard.receiveAttack([9, 2]);
+// tito.myBoard.receiveAttack(elonMusk.generateAttack());
+// tito.myBoard.receiveAttack(elonMusk.generateAttack());
+// tito.myBoard.receiveAttack(elonMusk.generateAttack());
+// tito.myBoard.receiveAttack(elonMusk.generateAttack());
+// tito.myBoard.receiveAttack(elonMusk.generateAttack());
+// tito.myBoard.receiveAttack(elonMusk.generateAttack());
+// tito.myBoard.receiveAttack(elonMusk.generateAttack());
+// tito.myBoard.receiveAttack(elonMusk.generateAttack());
+// tito.myBoard.receiveAttack(elonMusk.generateAttack());
+// console.log(tito.myBoard.printPlayerBoard());
+
+// export default BattleShip;
