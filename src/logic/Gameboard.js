@@ -35,11 +35,21 @@ const BattleShip = (() => {
 			// Ship exists and now we will send hit coordinates for ship to analyze hit location.
 			const currentShip = playerBoard[x][y];
 			currentShip.hit(x, y);
-
-			// Testing
-			console.table(currentShip.status);
-			console.log(`IsSunk: ${currentShip.isSunk()}`);
 		}
+	};
+
+	const areShipsSunk = () => {
+		for (let row = 0; row < 9; row++) {
+			for (let col = 0; col < 9; col++) {
+				// Looking for all valid ships
+				if (playerBoard[row][col] !== null && playerBoard[row][col] !== -1) {
+					if (!playerBoard[row][col].isSunk()) {
+						return false;
+					}
+				}
+			}
+		}
+		return true;
 	};
 
 	const printPlayerBoard = () => console.table(playerBoard);
@@ -61,12 +71,15 @@ const BattleShip = (() => {
 		receiveAttack(0, 7);
 		receiveAttack(0, 8);
 		receiveAttack(0, 9);
+
+		console.log(areShipsSunk());
 	};
 
 	return {
 		placeShip,
 		testShips,
 		printPlayerBoard,
+		areShipsSunk,
 	};
 })();
 
