@@ -61,6 +61,7 @@ const BattleShip = () => {
 	const printPlayerBoard = () => console.table(playerBoard);
 
 	return {
+		playerBoard,
 		placeShip,
 		printPlayerBoard,
 		areShipsSunk,

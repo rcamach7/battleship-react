@@ -1,0 +1,9 @@
+.col {
+	box-sizing: border-box;
+	width: 30px;
+	border: solid black 1px;
+}
+
+.row {
+	display: flex;
+}
