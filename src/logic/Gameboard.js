@@ -82,6 +82,15 @@ const Ship = (type, size) => {
 		status[hitLocation] = 0;
 	};
 
+	const isHitHere = (x_attack, y_attack) => {
+		let hitLocation = y_attack - y_coordinate;
+		if (status[hitLocation] === 1) {
+			return false;
+		} else {
+			return true;
+		}
+	};
+
 	const isSunk = () => {
 		for (let i = 0; i < status.length; i++) {
 			if (status[i] === 1) {
@@ -104,6 +113,7 @@ const Ship = (type, size) => {
 		status,
 		y_coordinate,
 		hit,
+		isHitHere,
 		isSunk,
 		setCoordinates,
 	};
