@@ -61,6 +61,7 @@ const BattleShip = () => {
 	const printPlayerBoard = () => console.table(playerBoard);
 
 	return {
+		playerBoard,
 		placeShip,
 		printPlayerBoard,
 		areShipsSunk,
@@ -79,6 +80,15 @@ const Ship = (type, size) => {
 	const hit = (x_attack, y_attack) => {
 		let hitLocation = y_attack - y_coordinate;
 		status[hitLocation] = 0;
+	};
+
+	const isHitHere = (x_attack, y_attack) => {
+		let hitLocation = y_attack - y_coordinate;
+		if (status[hitLocation] === 1) {
+			return false;
+		} else {
+			return true;
+		}
 	};
 
 	const isSunk = () => {
@@ -103,6 +113,7 @@ const Ship = (type, size) => {
 		status,
 		y_coordinate,
 		hit,
+		isHitHere,
 		isSunk,
 		setCoordinates,
 	};
