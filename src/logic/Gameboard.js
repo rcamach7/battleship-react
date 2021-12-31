@@ -33,16 +33,18 @@ const BattleShip = () => {
 		// no ship is present in this location so we will mark this as shot at (-1)
 		if (playerBoard[x][y] === null || playerBoard[x][y] === -1) {
 			playerBoard[x][y] = -1;
+			return -1;
 		} else {
 			// Ship exists and now we will send hit coordinates for ship to analyze hit location.
 			const currentShip = playerBoard[x][y];
 			currentShip.hit(x, y);
+			return 0;
 		}
 	};
 
 	const areShipsSunk = () => {
-		for (let row = 0; row < 9; row++) {
-			for (let col = 0; col < 9; col++) {
+		for (let row = 0; row < 10; row++) {
+			for (let col = 0; col < 10; col++) {
 				// Looking for all valid ships
 				if (playerBoard[row][col] !== null && playerBoard[row][col] !== -1) {
 					if (!playerBoard[row][col].isSunk()) {
@@ -60,7 +62,20 @@ const BattleShip = () => {
 
 	const printPlayerBoard = () => console.table(playerBoard);
 
+	const printShipObjects = () => {
+		const ships = [];
+		for (let row = 0; row < 10; row++) {
+			for (let col = 0; col < 10; col++) {
+				if (playerBoard[row][col] != null && playerBoard[row][col] != -1) {
+					ships.push(playerBoard[row][col]);
+				}
+			}
+		}
+		console.table(ships);
+	};
+
 	return {
+		printShipObjects,
 		playerBoard,
 		placeShip,
 		printPlayerBoard,
