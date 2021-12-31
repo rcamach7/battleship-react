@@ -17,13 +17,14 @@ const BattleShip = () => {
 	// Places ship horizontally in the board.
 	const placeShip = (ship, x, y) => {
 		if (y + ship.size > 10) {
-			return;
+			return false;
 		} else {
 			for (let yLength = y; yLength < y + ship.size; yLength++) {
 				// Let the ship know it's coordinates then place ship in board
 				ship.setCoordinates(x, y);
 				playerBoard[x][yLength] = ship;
 			}
+			return true;
 		}
 	};
 

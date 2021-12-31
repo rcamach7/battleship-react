@@ -7,7 +7,7 @@ class App extends React.Component {
 		return (
 			<div className="App">
 				<header className="title-container">
-					<h1>WW2 BattleShip Game</h1>
+					<h1>Battle Of Midway</h1>
 				</header>
 
 				<BattleGround />

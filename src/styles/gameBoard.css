@@ -1,3 +1,7 @@
+.BattleGround {
+	text-align: center;
+}
+
 .col {
 	box-sizing: border-box;
 	width: 75px;
@@ -6,4 +10,23 @@
 
 .row {
 	display: flex;
+}
+
+/* ShipDisplay */
+
+.shipDisplay p {
+	margin: 0;
+}
+
+.sizeDisplay {
+	display: flex;
+	justify-content: center;
+}
+
+.sizeSquare {
+	width: 10px;
+	height: 10px;
+
+	background-color: red;
+	border: solid black 2px;
 }

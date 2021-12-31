@@ -6,55 +6,56 @@ class BattleGround extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			player: Player(""),
+			player: Player("tito"),
+			ships: [Ship("Yorktown", 6), Ship("Midway", 4), Ship("Tang", 2)],
+			shipsPlaced: 0,
+			gameStarted: false,
 		};
 	}
 
-	// Loading a test board (simulates a user placing ships into his board)
-	componentDidMount() {
-		const titoPlayer = Player("tito");
-
-		const yorkTown = Ship("Carrier", 6);
-		const ussr = Ship("Battleship", 3);
-
-		titoPlayer.myBoard.placeShip(yorkTown, 9, 0);
-		titoPlayer.myBoard.placeShip(ussr, 4, 6);
-
-		// titoPlayer.myBoard.receiveAttack([9, 0]);
-		// titoPlayer.myBoard.receiveAttack([0, 1]);
-		// titoPlayer.myBoard.receiveAttack([9, 3]);
-
-		this.setState({
-			player: titoPlayer,
-		});
-	}
-
-	determineSymbol(x, y) {
-		const boardData = this.state.player.myBoard.playerBoard;
-		if (boardData[x][y] === null) {
-			return "--";
-		} else if (boardData[x][y] === -1) {
-			return "miss";
-		} else if (boardData[x][y].isHitHere(x, y)) {
-			return "ship hit";
+	handleNewMove(x, y) {
+		if (!this.state.gameStarted) {
+			this.placeShip(x, y);
 		} else {
-			return "--";
+			const curPlayer = this.state.player;
+			// Sends attack AND records if it hit a ship.
+			let result = curPlayer.myBoard.receiveAttack([x, y]);
+			// If it's a successful hit, we will ask the gameboard if all ships are sunk.
+			if (result === 0) {
+				if (this.state.player.myBoard.areShipsSunk()) {
+					alert("All enemy ships have been sunk");
+				}
+			}
+			this.setState({
+				player: curPlayer,
+			});
 		}
 	}
 
-	handleNewAttack(x, y) {
+	placeShip(x, y) {
 		const curPlayer = this.state.player;
-		let result = curPlayer.myBoard.receiveAttack([x, y]);
-		// If it's a successful hit, we will ask the gameboard if all ships are sunk.
-		if (result === 0) {
-			if (this.state.player.myBoard.areShipsSunk()) {
-				alert("All enemy ships have been sunk");
-			}
+		const placedShip = curPlayer.myBoard.placeShip(
+			this.state.ships[this.state.shipsPlaced],
+			x,
+			y
+		);
+
+		if (!placedShip) {
+			alert("Ship does not fit here");
+			return;
 		}
 
 		this.setState({
 			player: curPlayer,
+			shipsPlaced: this.state.shipsPlaced + 1,
 		});
+		// Start game once we set all of our ships.
+		if (this.state.shipsPlaced === 2) {
+			this.setState({
+				gameStarted: true,
+				shipsPlaced: 2,
+			});
+		}
 	}
 
 	generateBoard() {
@@ -69,7 +70,7 @@ class BattleGround extends React.Component {
 									<div
 										key={colKey}
 										className="col"
-										onClick={() => this.handleNewAttack(rowKey, colKey)}
+										onClick={() => this.handleNewMove(rowKey, colKey)}
 									>
 										{this.determineSymbol(rowKey, colKey)}
 									</div>
@@ -80,21 +81,61 @@ class BattleGround extends React.Component {
 				})}
 			</div>
 		);
-
 		return board;
+	}
+
+	determineSymbol(x, y) {
+		const boardData = this.state.player.myBoard.playerBoard;
+		if (boardData[x][y] === null) {
+			return "--";
+		} else if (boardData[x][y] === -1) {
+			return "miss";
+		} else if (boardData[x][y].isHitHere(x, y)) {
+			return "ship hit";
+		} else {
+			return "ship";
+		}
 	}
 
 	render() {
 		return (
-			<div className="BattleGrounds">
-				<h1>
-					Hello World, here we will generate a player board accurately
-					represented
-				</h1>
+			<div className="BattleGround">
+				<p>
+					{this.state.gameStarted
+						? "Attack Enemy Board"
+						: "Place Ships on board..."}
+				</p>
 				{this.generateBoard()}
+				<button
+					onClick={() => console.table(this.state.player.myBoard.playerBoard)}
+				>
+					Print Player Board
+				</button>
+				{this.state.gameStarted ? null : (
+					<ShipDisplay
+						ships={this.state.ships}
+						currentShip={this.state.shipsPlaced}
+					/>
+				)}
 			</div>
 		);
 	}
 }
+
+const ShipDisplay = (props) => {
+	return (
+		<div className="shipDisplay">
+			<p>Ship Name: {props.ships[props.currentShip].type}</p>
+			<p>Ship Size: {props.ships[props.currentShip].size}</p>
+			<div className="sizeDisplay">
+				{new Array(props.ships[props.currentShip].size)
+					.fill(0)
+					.map((sizeSquare, i) => {
+						return <div key={i} className="sizeSquare"></div>;
+					})}
+			</div>
+		</div>
+	);
+};
 
 export default BattleGround;
