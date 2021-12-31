@@ -175,26 +175,3 @@ const ComputerAI = () => {
 };
 
 export { BattleShip, Ship, Player, ComputerAI };
-// Testing Data
-// const elonMusk = computerAI();
-// const yoshiro = Ship("Carrier", 6);
-// elonMusk.myBoard.placeShip(yoshiro, 0, 0);
-// // console.table(elonMusk.myBoard.printPlayerBoard());
-
-// const tito = Player("tito");
-// const yorkTown = Ship("Carrier", 6);
-// tito.myBoard.placeShip(yorkTown, 9, 0);
-
-// tito.myBoard.receiveAttack([9, 0]);
-// tito.myBoard.receiveAttack([9, 1]);
-// tito.myBoard.receiveAttack([9, 2]);
-// tito.myBoard.receiveAttack(elonMusk.generateAttack());
-// tito.myBoard.receiveAttack(elonMusk.generateAttack());
-// tito.myBoard.receiveAttack(elonMusk.generateAttack());
-// tito.myBoard.receiveAttack(elonMusk.generateAttack());
-// tito.myBoard.receiveAttack(elonMusk.generateAttack());
-// tito.myBoard.receiveAttack(elonMusk.generateAttack());
-// tito.myBoard.receiveAttack(elonMusk.generateAttack());
-// tito.myBoard.receiveAttack(elonMusk.generateAttack());
-// tito.myBoard.receiveAttack(elonMusk.generateAttack());
-// console.log(tito.myBoard.printPlayerBoard());

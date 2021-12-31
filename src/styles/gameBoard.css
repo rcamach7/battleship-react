@@ -1,18 +1,13 @@
 .BattleGround {
 	text-align: center;
-}
-
-.col {
-	box-sizing: border-box;
-	width: 75px;
-	border: solid black 1px;
-}
-
-.row {
 	display: flex;
+	width: 100vw;
 }
 
-/* ShipDisplay */
+/* playerStyling */
+.playerContainer {
+	flex: 1;
+}
 
 .shipDisplay p {
 	margin: 0;
@@ -29,4 +24,20 @@
 
 	background-color: red;
 	border: solid black 2px;
+}
+
+/* ComputerContainer Styling */
+.computerContainer {
+	flex: 1;
+}
+
+/* Grid Styling */
+.col {
+	box-sizing: border-box;
+	width: 75px;
+	border: solid black 1px;
+}
+
+.row {
+	display: flex;
 }
