@@ -10,6 +10,7 @@ class BattleGround extends React.Component {
 			ships: [Ship("Yorktown", 6), Ship("Midway", 4), Ship("Tang", 2)],
 			shipsPlaced: 0,
 			gameStarted: false,
+			computerAi: ComputerAI(),
 		};
 	}
 
@@ -100,27 +101,76 @@ class BattleGround extends React.Component {
 	render() {
 		return (
 			<div className="BattleGround">
-				<p>
-					{this.state.gameStarted
-						? "Attack Enemy Board"
-						: "Place Ships on board..."}
-				</p>
-				{this.generateBoard()}
-				<button
-					onClick={() => console.table(this.state.player.myBoard.playerBoard)}
-				>
-					Print Player Board
-				</button>
-				{this.state.gameStarted ? null : (
-					<ShipDisplay
-						ships={this.state.ships}
-						currentShip={this.state.shipsPlaced}
-					/>
-				)}
+				<div className="playerContainer">
+					<p>
+						{this.state.gameStarted
+							? "Attack Enemy Board"
+							: "Place Ships on board..."}
+					</p>
+					{this.generateBoard()}
+					<button
+						onClick={() => console.table(this.state.player.myBoard.playerBoard)}
+					>
+						Print Player Board
+					</button>
+					{this.state.gameStarted ? null : (
+						<ShipDisplay
+							ships={this.state.ships}
+							currentShip={this.state.shipsPlaced}
+						/>
+					)}
+				</div>
+				<div className="computerContainer">
+					<ComputerAi computerAi={this.state.computerAi} />
+				</div>
 			</div>
 		);
 	}
 }
+
+const ComputerAi = (props) => {
+	const determineSymbol = (x, y) => {
+		const boardData = props.computerAi.myBoard.playerBoard;
+		if (boardData[x][y] === null) {
+			return "--";
+		} else if (boardData[x][y] === -1) {
+			return "miss";
+		} else if (boardData[x][y].isHitHere(x, y)) {
+			return "ship hit";
+		} else {
+			return "ship";
+		}
+	};
+
+	const generateBoard = () => {
+		const boardData = props.computerAi.myBoard.playerBoard;
+		const board = (
+			<div id="boardRow">
+				{boardData.map((row, rowKey) => {
+					return (
+						<div key={rowKey} className="row">
+							{row.map((col, colKey) => {
+								return (
+									<div key={colKey} className="col">
+										{determineSymbol(rowKey, colKey)}
+									</div>
+								);
+							})}
+						</div>
+					);
+				})}
+			</div>
+		);
+		return board;
+	};
+
+	return (
+		<div>
+			<p>Computer AI</p>
+			<div className="computerAiGrid">{generateBoard()}</div>
+		</div>
+	);
+};
 
 const ShipDisplay = (props) => {
 	return (
