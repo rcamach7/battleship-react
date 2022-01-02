@@ -2,37 +2,3 @@
 	text-align: center;
 	width: 100vw;
 }
-
-/* playerStyling */
-.battleGround-battleBoard {
-	display: flex;
-	gap: 10px;
-}
-
-.shipDisplay p {
-	margin: 0;
-}
-
-.shipDisplay-sizeDisplay {
-	display: flex;
-	justify-content: center;
-}
-
-.shipDisplay-sizeDisplay-sizeSquare {
-	width: 30px;
-	height: 30px;
-
-	background-color: red;
-	border: solid black 2px;
-}
-
-/* Grid Styling */
-.col {
-	box-sizing: border-box;
-	width: 75px;
-	border: solid black 1px;
-}
-
-.row {
-	display: flex;
-}
