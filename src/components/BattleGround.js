@@ -7,10 +7,51 @@ class BattleGround extends React.Component {
 		super(props);
 		this.state = {
 			player: Player("tito"),
-			ships: [Ship("Yorktown", 6), Ship("Midway", 4), Ship("Tang", 2)],
-			shipsPlaced: 0,
 			gameStarted: false,
 			computerAi: ComputerAI(),
+		};
+		this.handleGameStatus = this.handleGameStatus.bind(this);
+	}
+
+	handleGameStatus() {
+		this.setState({
+			gameStarted: true,
+		});
+	}
+
+	render() {
+		return (
+			<div className="BattleGround">
+				<p>
+					{this.state.gameStarted
+						? "Attack Enemy Board"
+						: "Place Ships on board..."}
+				</p>
+				<div className="battleGround-battleBoard">
+					<div className="playerContainer">
+						<MainPlayer
+							player={this.state.player}
+							gameStarted={this.state.gameStarted}
+							handleGameStatus={() => this.handleGameStatus()}
+						/>
+					</div>
+					<div className="computerContainer">
+						<ComputerAi computerAi={this.state.computerAi} />
+					</div>
+				</div>
+			</div>
+		);
+	}
+}
+
+class MainPlayer extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			player: props.player,
+			ships: [Ship("Yorktown", 6), Ship("Midway", 4), Ship("Tang", 2)],
+			shipsPlaced: 0,
+			gameStarted: props.gameStarted,
 		};
 	}
 
@@ -21,7 +62,7 @@ class BattleGround extends React.Component {
 			const curPlayer = this.state.player;
 			// Sends attack AND records if it hit a ship.
 			let result = curPlayer.myBoard.receiveAttack([x, y]);
-			// If it's a successful hit, we will ask the gameboard if all ships are sunk.
+			// If it's a successful hit, we will ask the game board if all ships are sunk.
 			if (result === 0) {
 				if (this.state.player.myBoard.areShipsSunk()) {
 					alert("All enemy ships have been sunk");
@@ -56,6 +97,7 @@ class BattleGround extends React.Component {
 				gameStarted: true,
 				shipsPlaced: 2,
 			});
+			this.props.handleGameStatus();
 		}
 	}
 
@@ -100,29 +142,15 @@ class BattleGround extends React.Component {
 
 	render() {
 		return (
-			<div className="BattleGround">
-				<div className="playerContainer">
-					<p>
-						{this.state.gameStarted
-							? "Attack Enemy Board"
-							: "Place Ships on board..."}
-					</p>
-					{this.generateBoard()}
-					<button
-						onClick={() => console.table(this.state.player.myBoard.playerBoard)}
-					>
-						Print Player Board
-					</button>
-					{this.state.gameStarted ? null : (
-						<ShipDisplay
-							ships={this.state.ships}
-							currentShip={this.state.shipsPlaced}
-						/>
-					)}
-				</div>
-				<div className="computerContainer">
-					<ComputerAi computerAi={this.state.computerAi} />
-				</div>
+			<div className="mainPlayer">
+				<p>Player Board</p>
+				{this.generateBoard()}
+				{this.state.gameStarted ? null : (
+					<ShipDisplay
+						ships={this.state.ships}
+						currentShip={this.state.shipsPlaced}
+					/>
+				)}
 			</div>
 		);
 	}
@@ -172,16 +200,19 @@ const ComputerAi = (props) => {
 	);
 };
 
+// Displays the ship currently being placed on board of player.
 const ShipDisplay = (props) => {
 	return (
 		<div className="shipDisplay">
 			<p>Ship Name: {props.ships[props.currentShip].type}</p>
 			<p>Ship Size: {props.ships[props.currentShip].size}</p>
-			<div className="sizeDisplay">
+			<div className="shipDisplay-sizeDisplay">
 				{new Array(props.ships[props.currentShip].size)
 					.fill(0)
 					.map((sizeSquare, i) => {
-						return <div key={i} className="sizeSquare"></div>;
+						return (
+							<div key={i} className="shipDisplay-sizeDisplay-sizeSquare"></div>
+						);
 					})}
 			</div>
 		</div>
