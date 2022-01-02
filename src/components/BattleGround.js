@@ -7,11 +7,16 @@ class BattleGround extends React.Component {
 		super(props);
 		this.state = {
 			player: Player("tito"),
-			ships: [Ship("Yorktown", 6), Ship("Midway", 4), Ship("Tang", 2)],
-			shipsPlaced: 0,
 			gameStarted: false,
 			computerAi: ComputerAI(),
 		};
+		this.handleGameStatus = this.handleGameStatus.bind(this);
+	}
+
+	handleGameStatus() {
+		this.setState({
+			gameStarted: true,
+		});
 	}
 
 	render() {
@@ -26,17 +31,9 @@ class BattleGround extends React.Component {
 					<div className="playerContainer">
 						<MainPlayer
 							player={this.state.player}
-							ships={this.state.ships}
-							shipsPlaced={this.state.shipsPlaced}
 							gameStarted={this.state.gameStarted}
+							handleGameStatus={() => this.handleGameStatus()}
 						/>
-
-						{this.state.gameStarted ? null : (
-							<ShipDisplay
-								ships={this.state.ships}
-								currentShip={this.state.shipsPlaced}
-							/>
-						)}
 					</div>
 					<div className="computerContainer">
 						<ComputerAi computerAi={this.state.computerAi} />
@@ -52,8 +49,8 @@ class MainPlayer extends React.Component {
 		super(props);
 		this.state = {
 			player: props.player,
-			ships: props.ships,
-			shipsPlaced: props.shipsPlaced,
+			ships: [Ship("Yorktown", 6), Ship("Midway", 4), Ship("Tang", 2)],
+			shipsPlaced: 0,
 			gameStarted: props.gameStarted,
 		};
 	}
@@ -65,7 +62,7 @@ class MainPlayer extends React.Component {
 			const curPlayer = this.state.player;
 			// Sends attack AND records if it hit a ship.
 			let result = curPlayer.myBoard.receiveAttack([x, y]);
-			// If it's a successful hit, we will ask the gameboard if all ships are sunk.
+			// If it's a successful hit, we will ask the game board if all ships are sunk.
 			if (result === 0) {
 				if (this.state.player.myBoard.areShipsSunk()) {
 					alert("All enemy ships have been sunk");
@@ -100,6 +97,7 @@ class MainPlayer extends React.Component {
 				gameStarted: true,
 				shipsPlaced: 2,
 			});
+			this.props.handleGameStatus();
 		}
 	}
 
@@ -147,6 +145,12 @@ class MainPlayer extends React.Component {
 			<div className="mainPlayer">
 				<p>Player Board</p>
 				{this.generateBoard()}
+				{this.state.gameStarted ? null : (
+					<ShipDisplay
+						ships={this.state.ships}
+						currentShip={this.state.shipsPlaced}
+					/>
+				)}
 			</div>
 		);
 	}
