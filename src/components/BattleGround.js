@@ -14,6 +14,50 @@ class BattleGround extends React.Component {
 		};
 	}
 
+	render() {
+		return (
+			<div className="BattleGround">
+				<p>
+					{this.state.gameStarted
+						? "Attack Enemy Board"
+						: "Place Ships on board..."}
+				</p>
+				<div className="battleGround-battleBoard">
+					<div className="playerContainer">
+						<MainPlayer
+							player={this.state.player}
+							ships={this.state.ships}
+							shipsPlaced={this.state.shipsPlaced}
+							gameStarted={this.state.gameStarted}
+						/>
+
+						{this.state.gameStarted ? null : (
+							<ShipDisplay
+								ships={this.state.ships}
+								currentShip={this.state.shipsPlaced}
+							/>
+						)}
+					</div>
+					<div className="computerContainer">
+						<ComputerAi computerAi={this.state.computerAi} />
+					</div>
+				</div>
+			</div>
+		);
+	}
+}
+
+class MainPlayer extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			player: props.player,
+			ships: props.ships,
+			shipsPlaced: props.shipsPlaced,
+			gameStarted: props.gameStarted,
+		};
+	}
+
 	handleNewMove(x, y) {
 		if (!this.state.gameStarted) {
 			this.placeShip(x, y);
@@ -100,29 +144,9 @@ class BattleGround extends React.Component {
 
 	render() {
 		return (
-			<div className="BattleGround">
-				<div className="playerContainer">
-					<p>
-						{this.state.gameStarted
-							? "Attack Enemy Board"
-							: "Place Ships on board..."}
-					</p>
-					{this.generateBoard()}
-					<button
-						onClick={() => console.table(this.state.player.myBoard.playerBoard)}
-					>
-						Print Player Board
-					</button>
-					{this.state.gameStarted ? null : (
-						<ShipDisplay
-							ships={this.state.ships}
-							currentShip={this.state.shipsPlaced}
-						/>
-					)}
-				</div>
-				<div className="computerContainer">
-					<ComputerAi computerAi={this.state.computerAi} />
-				</div>
+			<div className="mainPlayer">
+				<p>Player Board</p>
+				{this.generateBoard()}
 			</div>
 		);
 	}
@@ -172,16 +196,19 @@ const ComputerAi = (props) => {
 	);
 };
 
+// Displays the ship currently being placed on board of player.
 const ShipDisplay = (props) => {
 	return (
 		<div className="shipDisplay">
 			<p>Ship Name: {props.ships[props.currentShip].type}</p>
 			<p>Ship Size: {props.ships[props.currentShip].size}</p>
-			<div className="sizeDisplay">
+			<div className="shipDisplay-sizeDisplay">
 				{new Array(props.ships[props.currentShip].size)
 					.fill(0)
 					.map((sizeSquare, i) => {
-						return <div key={i} className="sizeSquare"></div>;
+						return (
+							<div key={i} className="shipDisplay-sizeDisplay-sizeSquare"></div>
+						);
 					})}
 			</div>
 		</div>

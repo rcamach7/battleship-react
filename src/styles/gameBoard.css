@@ -1,34 +1,29 @@
 .BattleGround {
 	text-align: center;
-	display: flex;
 	width: 100vw;
 }
 
 /* playerStyling */
-.playerContainer {
-	flex: 1;
+.battleGround-battleBoard {
+	display: flex;
+	gap: 10px;
 }
 
 .shipDisplay p {
 	margin: 0;
 }
 
-.sizeDisplay {
+.shipDisplay-sizeDisplay {
 	display: flex;
 	justify-content: center;
 }
 
-.sizeSquare {
-	width: 10px;
-	height: 10px;
+.shipDisplay-sizeDisplay-sizeSquare {
+	width: 30px;
+	height: 30px;
 
 	background-color: red;
 	border: solid black 2px;
-}
-
-/* ComputerContainer Styling */
-.computerContainer {
-	flex: 1;
 }
 
 /* Grid Styling */
