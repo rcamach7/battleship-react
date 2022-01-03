@@ -14,6 +14,8 @@ const BattleShip = () => {
 		[null, null, null, null, null, null, null, null, null, null],
 	];
 
+	const attackHistory = [];
+
 	// Places ship horizontally in the board.
 	const placeShip = (ship, x, y) => {
 		if (y + ship.size > 10) {
@@ -31,6 +33,9 @@ const BattleShip = () => {
 	const receiveAttack = (coordinate) => {
 		let x = coordinate[0];
 		let y = coordinate[1];
+		// Record attack history
+		attackHistory.push(coordinate);
+
 		// no ship is present in this location so we will mark this as shot at (-1)
 		if (playerBoard[x][y] === null || playerBoard[x][y] === -1) {
 			playerBoard[x][y] = -1;
@@ -41,6 +46,18 @@ const BattleShip = () => {
 			currentShip.hit(x, y);
 			return 0;
 		}
+	};
+
+	const isRepeatedAttack = (coordinate) => {
+		for (let i = 0; i < attackHistory.length; i++) {
+			if (
+				attackHistory[i][0] === coordinate[0] &&
+				attackHistory[i][1] === coordinate[1]
+			) {
+				return true;
+			}
+		}
+		return false;
 	};
 
 	const areShipsSunk = () => {
@@ -83,6 +100,7 @@ const BattleShip = () => {
 		areShipsSunk,
 		receiveAttack,
 		printShipStatus,
+		isRepeatedAttack,
 	};
 };
 
@@ -150,7 +168,7 @@ const ComputerAI = () => {
 	const moveHistory = [];
 
 	// Will return a coordinate for attack into the enemy board
-	const generateAttack = (enemyBoard) => {
+	const generateAttack = () => {
 		let x = Math.floor(Math.random() * 10);
 		let y = Math.floor(Math.random() * 10);
 

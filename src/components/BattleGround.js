@@ -8,15 +8,22 @@ class BattleGround extends React.Component {
 		super(props);
 		this.state = {
 			player: Player("tito"),
-			gameStarted: false,
 			computerAi: ComputerAI(),
+			gameStarted: false,
 		};
 		this.handleGameStatus = this.handleGameStatus.bind(this);
+		this.handleAutoAttack = this.handleAutoAttack.bind(this);
 	}
 
 	handleGameStatus() {
 		this.setState({
 			gameStarted: true,
+		});
+	}
+
+	handleAutoAttack(playerIn) {
+		this.setState({
+			player: playerIn,
 		});
 	}
 
@@ -34,7 +41,12 @@ class BattleGround extends React.Component {
 						gameStarted={this.state.gameStarted}
 						handleGameStatus={() => this.handleGameStatus()}
 					/>
-					<ComputerAi computerAi={this.state.computerAi} />
+					<ComputerAi
+						computerAi={this.state.computerAi}
+						gameStarted={this.state.gameStarted}
+						player={this.state.player}
+						handleAutoAttack={() => this.handleAutoAttack()}
+					/>
 				</div>
 			</div>
 		);
