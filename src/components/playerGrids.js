@@ -9,26 +9,12 @@ class MainPlayer extends React.Component {
 			player: props.player,
 			ships: [Ship("Yorktown", 6), Ship("Midway", 4), Ship("Tang", 2)],
 			shipsPlaced: 0,
-			gameStarted: props.gameStarted,
 		};
 	}
 
 	handleNewMove(x, y) {
 		if (!this.state.gameStarted) {
 			this.placeShip(x, y);
-		} else {
-			const curPlayer = this.state.player;
-			// Sends attack AND records if it hit a ship.
-			let result = curPlayer.myBoard.receiveAttack([x, y]);
-			// If it's a successful hit, we will ask the game board if all ships are sunk.
-			if (result === 0) {
-				if (this.state.player.myBoard.areShipsSunk()) {
-					alert("All enemy ships have been sunk");
-				}
-			}
-			this.setState({
-				player: curPlayer,
-			});
 		}
 	}
 
@@ -119,6 +105,7 @@ class ComputerAi extends React.Component {
 		super(props);
 		this.state = {
 			computer: props.computerAi,
+			player: props.player,
 		};
 	}
 
@@ -153,10 +140,15 @@ class ComputerAi extends React.Component {
 		if (!this.props.gameStarted) {
 			return;
 		}
+		// Before sending an attack - make sure we aren't (as a player) attacking an area already struck.
 		const curComputer = this.state.computer;
+		if (curComputer.myBoard.isRepeatedAttack([x, y])) {
+			alert("Already attacked here sir!");
+			return;
+		}
+
 		// Sends attack AND records if it hit a ship. Then, If it's a successful hit, we will ask the game board if all ships are sunk.
 		let attemptAttack = curComputer.myBoard.receiveAttack([x, y]);
-		console.log(attemptAttack);
 		if (attemptAttack === 0) {
 			if (curComputer.myBoard.areShipsSunk()) {
 				alert("All enemy ships sunk");
@@ -165,6 +157,16 @@ class ComputerAi extends React.Component {
 		this.setState({
 			computer: curComputer,
 		});
+
+		// Now that we have received an attack, it's our turn to send out an attack.
+		const curPlayer = this.state.player;
+		const generateAttack = this.state.computer.generateAttack();
+		curPlayer.myBoard.receiveAttack(generateAttack);
+
+		this.setState({
+			player: curPlayer,
+		});
+		this.props.handleAutoAttack(curPlayer);
 	}
 
 	generateBoard() {
