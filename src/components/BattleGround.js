@@ -34,7 +34,10 @@ class BattleGround extends React.Component {
 						gameStarted={this.state.gameStarted}
 						handleGameStatus={() => this.handleGameStatus()}
 					/>
-					<ComputerAi computerAi={this.state.computerAi} />
+					<ComputerAi
+						computerAi={this.state.computerAi}
+						gameStarted={this.state.gameStarted}
+					/>
 				</div>
 			</div>
 		);

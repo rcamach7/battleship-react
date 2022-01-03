@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Ship } from "../logic/Gameboard";
 import "../styles/playerGrids.css";
 
@@ -114,9 +114,29 @@ class MainPlayer extends React.Component {
 	}
 }
 
-const ComputerAi = (props) => {
-	const determineSymbol = (x, y) => {
-		const boardData = props.computerAi.myBoard.playerBoard;
+class ComputerAi extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			computer: props.computerAi,
+		};
+	}
+
+	componentDidMount() {
+		const computerAISetup = this.state.computer;
+
+		const ships = [Ship("Akagi", 6), Ship("Mikuma", 4), Ship("Yamato", 2)];
+		computerAISetup.myBoard.placeShip(ships[0], 0, 0);
+		computerAISetup.myBoard.placeShip(ships[1], 1, 0);
+		computerAISetup.myBoard.placeShip(ships[2], 2, 4);
+
+		this.setState({
+			computer: computerAISetup,
+		});
+	}
+
+	determineSymbol(x, y) {
+		const boardData = this.state.computer.myBoard.playerBoard;
 		if (boardData[x][y] === null) {
 			return "--";
 		} else if (boardData[x][y] === -1) {
@@ -124,12 +144,31 @@ const ComputerAi = (props) => {
 		} else if (boardData[x][y].isHitHere(x, y)) {
 			return "ship hit";
 		} else {
-			return "ship";
+			return "--";
 		}
-	};
+	}
 
-	const generateBoard = () => {
-		const boardData = props.computerAi.myBoard.playerBoard;
+	handleNewAttack(x, y) {
+		// Will not allow an attack unless game has been started.
+		if (!this.props.gameStarted) {
+			return;
+		}
+		const curComputer = this.state.computer;
+		// Sends attack AND records if it hit a ship. Then, If it's a successful hit, we will ask the game board if all ships are sunk.
+		let attemptAttack = curComputer.myBoard.receiveAttack([x, y]);
+		console.log(attemptAttack);
+		if (attemptAttack === 0) {
+			if (curComputer.myBoard.areShipsSunk()) {
+				alert("All enemy ships sunk");
+			}
+		}
+		this.setState({
+			computer: curComputer,
+		});
+	}
+
+	generateBoard() {
+		const boardData = this.state.computer.myBoard.playerBoard;
 		const board = (
 			<div id="boardRow">
 				{boardData.map((row, rowKey) => {
@@ -137,8 +176,12 @@ const ComputerAi = (props) => {
 						<div key={rowKey} className="row">
 							{row.map((col, colKey) => {
 								return (
-									<div key={colKey} className="col">
-										{determineSymbol(rowKey, colKey)}
+									<div
+										key={colKey}
+										className="col"
+										onClick={() => this.handleNewAttack(rowKey, colKey)}
+									>
+										{this.determineSymbol(rowKey, colKey)}
 									</div>
 								);
 							})}
@@ -148,15 +191,17 @@ const ComputerAi = (props) => {
 			</div>
 		);
 		return board;
-	};
+	}
 
-	return (
-		<div>
-			<p>Computer AI</p>
-			<div className="computerAiGrid">{generateBoard()}</div>
-		</div>
-	);
-};
+	render() {
+		return (
+			<div>
+				<p>Computer AI</p>
+				<div className="computerAiGrid">{this.generateBoard()}</div>
+			</div>
+		);
+	}
+}
 
 // Displays the ship currently being placed on board of player.
 const ShipDisplay = (props) => {
