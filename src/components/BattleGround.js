@@ -1,6 +1,7 @@
 import React from "react";
 import { MainPlayer, ComputerAi } from "./playerGrids";
-import { Player, ComputerAI } from "../logic/Gameboard";
+import { Player, ComputerAI, Ship } from "../logic/Gameboard";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../styles/gameBoard.css";
 
 class BattleGround extends React.Component {
@@ -10,9 +11,18 @@ class BattleGround extends React.Component {
 			player: Player("tito"),
 			computerAi: ComputerAI(),
 			gameStarted: false,
+			ships: [Ship("Yorktown", 6), Ship("Midway", 4), Ship("Tang", 2)],
+			currentShip: 0,
 		};
 		this.handleGameStatus = this.handleGameStatus.bind(this);
 		this.handleAutoAttack = this.handleAutoAttack.bind(this);
+		this.handleCurrentShip = this.handleCurrentShip.bind(this);
+	}
+
+	handleCurrentShip(currentShipIn) {
+		this.setState({
+			currentShip: currentShipIn,
+		});
 	}
 
 	handleGameStatus() {
@@ -30,16 +40,12 @@ class BattleGround extends React.Component {
 	render() {
 		return (
 			<div className="BattleGround">
-				<p>
-					{this.state.gameStarted
-						? "Attack Enemy Board"
-						: "Place Ships on board..."}
-				</p>
 				<div className="battleGround-battleBoard">
 					<MainPlayer
 						player={this.state.player}
 						gameStarted={this.state.gameStarted}
 						handleGameStatus={() => this.handleGameStatus()}
+						handleCurrentShip={this.handleCurrentShip}
 					/>
 					<ComputerAi
 						computerAi={this.state.computerAi}
@@ -48,9 +54,45 @@ class BattleGround extends React.Component {
 						handleAutoAttack={() => this.handleAutoAttack()}
 					/>
 				</div>
+				<p className="gameStatus">
+					{this.state.gameStarted
+						? "Attack Enemy Board!"
+						: "Place Ships on board..."}
+				</p>
+				{this.state.gameStarted ? null : (
+					<ShipDisplay
+						ships={this.state.ships}
+						currentShip={this.state.currentShip}
+					/>
+				)}
 			</div>
 		);
 	}
 }
+
+const ShipDisplay = (props) => {
+	return (
+		<div className="shipDisplay">
+			<p className="shipDisplay-status">Current Ship:</p>
+			<p className="shipDisplay-description">
+				Name: {props.ships[props.currentShip].type}
+			</p>
+			<p className="shipDisplay-description">
+				Size: {props.ships[props.currentShip].size}
+			</p>
+			<div className="shipDisplay-sizeDisplay">
+				{new Array(props.ships[props.currentShip].size)
+					.fill(0)
+					.map((sizeSquare, i) => {
+						return (
+							<div key={i} className="shipDisplay-sizeDisplay-sizeSquare">
+								<FontAwesomeIcon icon="anchor" size="1x" />
+							</div>
+						);
+					})}
+			</div>
+		</div>
+	);
+};
 
 export default BattleGround;

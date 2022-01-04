@@ -1,6 +1,14 @@
 import React from "react";
 import "./styles/App.css";
 import BattleGround from "./components/BattleGround";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { fab } from "@fortawesome/free-brands-svg-icons";
+import {
+	faWater,
+	faBullseye,
+	faAnchor,
+	faRedo,
+} from "@fortawesome/free-solid-svg-icons";
 
 class App extends React.Component {
 	render() {
@@ -15,5 +23,7 @@ class App extends React.Component {
 		);
 	}
 }
+
+library.add(fab, faWater, faBullseye, faAnchor, faRedo);
 
 export default App;

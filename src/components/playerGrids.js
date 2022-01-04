@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { Ship } from "../logic/Gameboard";
 import "../styles/playerGrids.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 class MainPlayer extends React.Component {
 	constructor(props) {
@@ -30,7 +31,7 @@ class MainPlayer extends React.Component {
 			alert("Ship does not fit here");
 			return;
 		}
-
+		this.props.handleCurrentShip(this.state.shipsPlaced + 1);
 		this.setState({
 			player: curPlayer,
 			shipsPlaced: this.state.shipsPlaced + 1,
@@ -74,27 +75,21 @@ class MainPlayer extends React.Component {
 	determineSymbol(x, y) {
 		const boardData = this.state.player.myBoard.playerBoard;
 		if (boardData[x][y] === null) {
-			return "--";
+			return <FontAwesomeIcon icon="water" size="1x" />;
 		} else if (boardData[x][y] === -1) {
-			return "miss";
+			return "";
 		} else if (boardData[x][y].isHitHere(x, y)) {
-			return "ship hit";
+			return <FontAwesomeIcon icon="bullseye" className="hit" size="1x" />;
 		} else {
-			return "ship";
+			return <FontAwesomeIcon icon="anchor" size="1x" />;
 		}
 	}
 
 	render() {
 		return (
 			<div className="mainPlayer">
-				<p>Player Board</p>
+				<p className="playerNames">United States Navy</p>
 				{this.generateBoard()}
-				{this.state.gameStarted ? null : (
-					<ShipDisplay
-						ships={this.state.ships}
-						currentShip={this.state.shipsPlaced}
-					/>
-				)}
 			</div>
 		);
 	}
@@ -114,8 +109,8 @@ class ComputerAi extends React.Component {
 
 		const ships = [Ship("Akagi", 6), Ship("Mikuma", 4), Ship("Yamato", 2)];
 		computerAISetup.myBoard.placeShip(ships[0], 0, 0);
-		computerAISetup.myBoard.placeShip(ships[1], 1, 0);
-		computerAISetup.myBoard.placeShip(ships[2], 2, 4);
+		computerAISetup.myBoard.placeShip(ships[1], 5, 3);
+		computerAISetup.myBoard.placeShip(ships[2], 7, 4);
 
 		this.setState({
 			computer: computerAISetup,
@@ -125,13 +120,13 @@ class ComputerAi extends React.Component {
 	determineSymbol(x, y) {
 		const boardData = this.state.computer.myBoard.playerBoard;
 		if (boardData[x][y] === null) {
-			return "--";
+			return <FontAwesomeIcon icon="water" size="1x" />;
 		} else if (boardData[x][y] === -1) {
-			return "miss";
+			return "";
 		} else if (boardData[x][y].isHitHere(x, y)) {
-			return "ship hit";
+			return <FontAwesomeIcon icon="bullseye" className="hit" size="1x" />;
 		} else {
-			return "--";
+			return <FontAwesomeIcon icon="water" size="1x" />;
 		}
 	}
 
@@ -198,30 +193,11 @@ class ComputerAi extends React.Component {
 	render() {
 		return (
 			<div>
-				<p>Computer AI</p>
+				<p className="playerNames">Japanese Empire Navy</p>
 				<div className="computerAiGrid">{this.generateBoard()}</div>
 			</div>
 		);
 	}
 }
-
-// Displays the ship currently being placed on board of player.
-const ShipDisplay = (props) => {
-	return (
-		<div className="shipDisplay">
-			<p>Ship Name: {props.ships[props.currentShip].type}</p>
-			<p>Ship Size: {props.ships[props.currentShip].size}</p>
-			<div className="shipDisplay-sizeDisplay">
-				{new Array(props.ships[props.currentShip].size)
-					.fill(0)
-					.map((sizeSquare, i) => {
-						return (
-							<div key={i} className="shipDisplay-sizeDisplay-sizeSquare"></div>
-						);
-					})}
-			</div>
-		</div>
-	);
-};
 
 export { ComputerAi, MainPlayer };

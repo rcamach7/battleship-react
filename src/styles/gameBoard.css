@@ -1,4 +1,59 @@
 .BattleGround {
 	text-align: center;
-	width: 100vw;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	padding: 20px;
+	border-radius: 15px;
+
+	background-color: rgba(0, 0, 0, 0.8);
+}
+
+.gameStatus {
+	font-weight: bolder;
+	margin-bottom: 0px;
+}
+
+/* Ship Display Styling */
+.shipDisplay {
+	box-sizing: border-box;
+	margin-top: 10px;
+	border: dashed white 1px;
+	padding: 5px;
+}
+
+.shipDisplay-status {
+	background-color: white;
+	color: black;
+	min-width: 200px;
+	padding: 10px;
+	font-weight: bolder;
+}
+
+.shipDisplay p {
+	margin: 0;
+	font-weight: bolder;
+}
+
+.shipDisplay-sizeDisplay {
+	display: flex;
+	justify-content: center;
+}
+
+.shipDisplay-description {
+	text-align: left;
+}
+
+.shipDisplay-sizeDisplay-sizeSquare {
+	width: 30px;
+	height: 30px;
+	padding-top: 5px;
+
+	border: solid white 2px;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
