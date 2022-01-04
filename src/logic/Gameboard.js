@@ -18,7 +18,7 @@ const BattleShip = () => {
 
 	// Places ship horizontally in the board.
 	const placeShip = (ship, x, y) => {
-		if (y + ship.size > 10) {
+		if (y + ship.size > 10 || playerBoard[x][y] !== null) {
 			return false;
 		} else {
 			for (let yLength = y; yLength < y + ship.size; yLength++) {

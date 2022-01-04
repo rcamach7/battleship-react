@@ -57,7 +57,7 @@ class MainPlayer extends React.Component {
 								return (
 									<div
 										key={colKey}
-										className="col"
+										className="col player-col"
 										onClick={() => this.handleNewMove(rowKey, colKey)}
 									>
 										{this.determineSymbol(rowKey, colKey)}
@@ -145,7 +145,7 @@ class ComputerAi extends React.Component {
 		let attemptAttack = curComputer.myBoard.receiveAttack([x, y]);
 		if (attemptAttack === 0) {
 			if (curComputer.myBoard.areShipsSunk()) {
-				alert("All enemy ships sunk");
+				alert("Victory! All Japanese ships sunk!");
 			}
 		}
 		this.setState({
@@ -161,6 +161,10 @@ class ComputerAi extends React.Component {
 			player: curPlayer,
 		});
 		this.props.handleAutoAttack(curPlayer);
+		// Alert if computer has won
+		if (curPlayer.myBoard.areShipsSunk()) {
+			alert("Defeat! All American ships sunk");
+		}
 	}
 
 	generateBoard() {
@@ -174,7 +178,7 @@ class ComputerAi extends React.Component {
 								return (
 									<div
 										key={colKey}
-										className="col"
+										className="col computer-col"
 										onClick={() => this.handleNewAttack(rowKey, colKey)}
 									>
 										{this.determineSymbol(rowKey, colKey)}

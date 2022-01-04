@@ -8,6 +8,8 @@ import {
 	faBullseye,
 	faAnchor,
 	faRedo,
+	faArrowsAltH,
+	faArrowsAltV,
 } from "@fortawesome/free-solid-svg-icons";
 
 class App extends React.Component {
@@ -24,6 +26,14 @@ class App extends React.Component {
 	}
 }
 
-library.add(fab, faWater, faBullseye, faAnchor, faRedo);
+library.add(
+	fab,
+	faWater,
+	faBullseye,
+	faAnchor,
+	faRedo,
+	faArrowsAltH,
+	faArrowsAltV
+);
 
 export default App;
