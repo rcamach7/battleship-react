@@ -13,10 +13,12 @@ class BattleGround extends React.Component {
 			gameStarted: false,
 			ships: [Ship("Yorktown", 6), Ship("Midway", 4), Ship("Tang", 2)],
 			currentShip: 0,
+			normalAxis: true,
 		};
 		this.handleGameStatus = this.handleGameStatus.bind(this);
 		this.handleAutoAttack = this.handleAutoAttack.bind(this);
 		this.handleCurrentShip = this.handleCurrentShip.bind(this);
+		this.toggleAxis = this.toggleAxis.bind(this);
 	}
 
 	handleCurrentShip(currentShipIn) {
@@ -35,6 +37,18 @@ class BattleGround extends React.Component {
 		this.setState({
 			player: playerIn,
 		});
+	}
+
+	toggleAxis() {
+		if (this.state.normalAxis === true) {
+			this.setState({
+				normalAxis: false,
+			});
+		} else {
+			this.setState({
+				normalAxis: true,
+			});
+		}
 	}
 
 	render() {
@@ -63,6 +77,8 @@ class BattleGround extends React.Component {
 					<ShipDisplay
 						ships={this.state.ships}
 						currentShip={this.state.currentShip}
+						normalAxis={this.state.normalAxis}
+						toggleAxis={() => this.toggleAxis()}
 					/>
 				)}
 			</div>
@@ -79,6 +95,18 @@ const ShipDisplay = (props) => {
 			</p>
 			<p className="shipDisplay-description">
 				Size: {props.ships[props.currentShip].size}
+			</p>
+			<p className="shipDisplay-description axis">
+				Axis:
+				{props.normalAxis ? (
+					<button onClick={() => props.toggleAxis()}>
+						<FontAwesomeIcon icon="arrows-alt-h" size="1x" />
+					</button>
+				) : (
+					<button onClick={() => props.toggleAxis()}>
+						<FontAwesomeIcon icon="arrows-alt-v" size="1x" />
+					</button>
+				)}
 			</p>
 			<div className="shipDisplay-sizeDisplay">
 				{new Array(props.ships[props.currentShip].size)

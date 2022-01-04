@@ -24,9 +24,14 @@
 	align-items: center;
 }
 
-.col:hover {
+.player-col:hover {
 	transition: 0.35s ease-in-out;
-	background: grey;
+	color: blue;
+}
+
+.computer-col:hover {
+	transition: 0.35s ease-in-out;
+	background: red;
 }
 
 .row {
