@@ -99,17 +99,13 @@ const ShipDisplay = (props) => {
 			<p className="shipDisplay-description axis">
 				Axis:
 				{props.normalAxis ? (
-					<FontAwesomeIcon
-						onClick={() => props.toggleAxis()}
-						icon="arrows-alt-h"
-						size="1x"
-					/>
+					<button onClick={() => props.toggleAxis()}>
+						<FontAwesomeIcon icon="arrows-alt-h" size="1x" />
+					</button>
 				) : (
-					<FontAwesomeIcon
-						onClick={() => props.toggleAxis()}
-						icon="arrows-alt-v"
-						size="1x"
-					/>
+					<button onClick={() => props.toggleAxis()}>
+						<FontAwesomeIcon icon="arrows-alt-v" size="1x" />
+					</button>
 				)}
 			</p>
 			<div className="shipDisplay-sizeDisplay">

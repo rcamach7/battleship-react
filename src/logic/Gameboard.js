@@ -16,8 +16,8 @@ const BattleShip = () => {
 
 	const attackHistory = [];
 
-	// Places ship horizontally in the board.
-	const placeShip = (ship, x, y) => {
+	// Places ship horizontally in the board. If Normal axis is true then we perform a horizontal placement
+	const placeShip = (ship, x, y, normalAxis) => {
 		if (y + ship.size > 10 || playerBoard[x][y] !== null) {
 			return false;
 		} else {
@@ -74,32 +74,11 @@ const BattleShip = () => {
 		return true;
 	};
 
-	const printShipStatus = (coordinate) => {
-		console.table(playerBoard[coordinate[0]][coordinate[1]].status);
-	};
-
-	const printPlayerBoard = () => console.table(playerBoard);
-
-	const printShipObjects = () => {
-		const ships = [];
-		for (let row = 0; row < 10; row++) {
-			for (let col = 0; col < 10; col++) {
-				if (playerBoard[row][col] != null && playerBoard[row][col] != -1) {
-					ships.push(playerBoard[row][col]);
-				}
-			}
-		}
-		console.table(ships);
-	};
-
 	return {
-		printShipObjects,
 		playerBoard,
 		placeShip,
-		printPlayerBoard,
 		areShipsSunk,
 		receiveAttack,
-		printShipStatus,
 		isRepeatedAttack,
 	};
 };
