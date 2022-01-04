@@ -7,8 +7,8 @@
 
 	padding: 20px;
 	border-radius: 15px;
-
-	background-color: rgba(0, 0, 0, 0.8);
+	/* 
+	background-color: rgba(0, 0, 0, 0.8); */
 }
 
 .gameStatus {
@@ -20,7 +20,7 @@
 .shipDisplay {
 	box-sizing: border-box;
 	margin-top: 10px;
-	border: dashed white 1px;
+	border: dashed black 1px;
 	padding: 5px;
 }
 
@@ -51,7 +51,7 @@
 	height: 30px;
 	padding-top: 5px;
 
-	border: solid white 2px;
+	border: solid black 2px;
 
 	display: flex;
 	justify-content: center;

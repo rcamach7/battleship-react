@@ -138,7 +138,6 @@ class ComputerAi extends React.Component {
 		// Before sending an attack - make sure we aren't (as a player) attacking an area already struck.
 		const curComputer = this.state.computer;
 		if (curComputer.myBoard.isRepeatedAttack([x, y])) {
-			alert("Already attacked here sir!");
 			return;
 		}
 

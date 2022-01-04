@@ -1,6 +1,8 @@
-/* playerStyling */
+/* Player + Computer Container */
 .battleGround-battleBoard {
 	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
 	gap: 20px;
 }
 
@@ -15,11 +17,16 @@
 	max-width: 30px;
 	min-height: 30px;
 	min-height: 30px;
-	border: solid white 1px;
+	border: solid black 1px;
 
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+
+.col:hover {
+	transition: 0.35s ease-in-out;
+	background: grey;
 }
 
 .row {
