@@ -14,11 +14,25 @@ class BattleGround extends React.Component {
 			ships: [Ship("Yorktown", 6), Ship("Midway", 4), Ship("Tang", 2)],
 			currentShip: 0,
 			normalAxis: true,
+			gameStatus: [
+				"Place Ships on board...",
+				"Attack Enemy Board!",
+				"Victory! WW2 shifts in our favor!",
+				"Defeated by the Japanese!",
+			],
+			gameStatusCode: 0,
 		};
 		this.handleGameStatus = this.handleGameStatus.bind(this);
 		this.handleAutoAttack = this.handleAutoAttack.bind(this);
 		this.handleCurrentShip = this.handleCurrentShip.bind(this);
 		this.toggleAxis = this.toggleAxis.bind(this);
+		this.handleGameStatusCode = this.handleGameStatusCode.bind(this);
+	}
+
+	handleGameStatusCode(statusCodeIn) {
+		this.setState({
+			gameStatusCode: statusCodeIn,
+		});
 	}
 
 	handleCurrentShip(currentShipIn) {
@@ -54,24 +68,8 @@ class BattleGround extends React.Component {
 	render() {
 		return (
 			<div className="BattleGround">
-				<div className="battleGround-battleBoard">
-					<MainPlayer
-						player={this.state.player}
-						gameStarted={this.state.gameStarted}
-						handleGameStatus={() => this.handleGameStatus()}
-						handleCurrentShip={this.handleCurrentShip}
-					/>
-					<ComputerAi
-						computerAi={this.state.computerAi}
-						gameStarted={this.state.gameStarted}
-						player={this.state.player}
-						handleAutoAttack={() => this.handleAutoAttack()}
-					/>
-				</div>
 				<p className="gameStatus">
-					{this.state.gameStarted
-						? "Attack Enemy Board!"
-						: "Place Ships on board..."}
+					{this.state.gameStatus[this.state.gameStatusCode]}
 				</p>
 				{this.state.gameStarted ? null : (
 					<ShipDisplay
@@ -81,6 +79,23 @@ class BattleGround extends React.Component {
 						toggleAxis={() => this.toggleAxis()}
 					/>
 				)}
+				<div className="battleGround-battleBoard">
+					<MainPlayer
+						player={this.state.player}
+						gameStarted={this.state.gameStarted}
+						handleGameStatus={() => this.handleGameStatus()}
+						handleCurrentShip={this.handleCurrentShip}
+						normalAxis={this.state.normalAxis}
+						handleGameStatusCode={this.handleGameStatusCode}
+					/>
+					<ComputerAi
+						computerAi={this.state.computerAi}
+						gameStarted={this.state.gameStarted}
+						player={this.state.player}
+						handleAutoAttack={() => this.handleAutoAttack()}
+						handleGameStatusCode={this.handleGameStatusCode}
+					/>
+				</div>
 			</div>
 		);
 	}

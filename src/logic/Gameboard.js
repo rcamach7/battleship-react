@@ -18,13 +18,38 @@ const BattleShip = () => {
 
 	// Places ship horizontally in the board. If Normal axis is true then we perform a horizontal placement
 	const placeShip = (ship, x, y, normalAxis) => {
-		if (y + ship.size > 10 || playerBoard[x][y] !== null) {
+		// Before running any of the below code, we must check if it's a valid spot.
+		if (playerBoard[x][y] !== null) {
 			return false;
+		}
+		if (normalAxis) {
+			for (let yLength = y; yLength < y + ship.size; yLength++) {
+				if (playerBoard[x][yLength] !== null) {
+					return false;
+				}
+			}
 		} else {
+			for (let xLength = x; xLength < x + ship.size; xLength++) {
+				if (playerBoard[xLength][y] !== null) {
+					return false;
+				}
+			}
+		}
+
+		// Now we can safely place the ship knowing it's not colliding with another one.
+		if (normalAxis) {
 			for (let yLength = y; yLength < y + ship.size; yLength++) {
 				// Let the ship know it's coordinates then place ship in board
 				ship.setCoordinates(x, y);
 				playerBoard[x][yLength] = ship;
+			}
+			return true;
+		} else {
+			// Opposite Axis Placement
+			for (let xLength = x; xLength < x + ship.size; xLength++) {
+				// Let the ship know it's coordinates then place ship in board
+				ship.setCoordinates(x, y);
+				playerBoard[xLength][y] = ship;
 			}
 			return true;
 		}
