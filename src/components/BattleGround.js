@@ -2,7 +2,7 @@ import React from "react";
 import { MainPlayer, ComputerAi } from "./playerGrids";
 import { Player, ComputerAI, Ship } from "../logic/Gameboard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "../styles/gameBoard.css";
+import "../styles/BattleGround.css";
 
 class BattleGround extends React.Component {
 	constructor(props) {
