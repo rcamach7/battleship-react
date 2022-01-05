@@ -24,7 +24,8 @@ class MainPlayer extends React.Component {
 		const placedShip = curPlayer.myBoard.placeShip(
 			this.state.ships[this.state.shipsPlaced],
 			x,
-			y
+			y,
+			this.props.normalAxis
 		);
 
 		if (!placedShip) {
@@ -43,6 +44,7 @@ class MainPlayer extends React.Component {
 				shipsPlaced: 2,
 			});
 			this.props.handleGameStatus();
+			this.props.handleGameStatusCode(1);
 		}
 	}
 
@@ -108,9 +110,9 @@ class ComputerAi extends React.Component {
 		const computerAISetup = this.state.computer;
 
 		const ships = [Ship("Akagi", 6), Ship("Mikuma", 4), Ship("Yamato", 2)];
-		computerAISetup.myBoard.placeShip(ships[0], 0, 0);
-		computerAISetup.myBoard.placeShip(ships[1], 5, 3);
-		computerAISetup.myBoard.placeShip(ships[2], 7, 4);
+		computerAISetup.myBoard.placeShip(ships[0], 0, 0, true);
+		computerAISetup.myBoard.placeShip(ships[1], 5, 3, true);
+		computerAISetup.myBoard.placeShip(ships[2], 7, 4, true);
 
 		this.setState({
 			computer: computerAISetup,
@@ -144,8 +146,9 @@ class ComputerAi extends React.Component {
 		// Sends attack AND records if it hit a ship. Then, If it's a successful hit, we will ask the game board if all ships are sunk.
 		let attemptAttack = curComputer.myBoard.receiveAttack([x, y]);
 		if (attemptAttack === 0) {
+			// Handle player win
 			if (curComputer.myBoard.areShipsSunk()) {
-				alert("Victory! All Japanese ships sunk!");
+				this.props.handleGameStatusCode(2);
 			}
 		}
 		this.setState({
@@ -161,9 +164,9 @@ class ComputerAi extends React.Component {
 			player: curPlayer,
 		});
 		this.props.handleAutoAttack(curPlayer);
-		// Alert if computer has won
+		// Handle computer win
 		if (curPlayer.myBoard.areShipsSunk()) {
-			alert("Defeat! All American ships sunk");
+			this.props.handleGameStatusCode(3);
 		}
 	}
 
