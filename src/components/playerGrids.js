@@ -113,8 +113,14 @@ class ComputerAi extends React.Component {
       if (curComputer.myBoard.areShipsSunk()) {
         this.props.handleGameStatusCode(2);
       }
+      // Since it is a successful attack by the player - we will not allow the computer to send an attack. Player can attack again.
+      this.props.handleComputerChange(curComputer);
+      return;
     }
     this.props.handleComputerChange(curComputer);
+    if (attemptAttack === 0) {
+      return;
+    }
     this.returnAttack();
   }
 
@@ -122,7 +128,13 @@ class ComputerAi extends React.Component {
     // Now that we have received an attack, it's our turn to send out an attack.
     const curPlayer = this.props.player;
     const generateAttack = this.props.computerAi.generateAttack();
-    curPlayer.myBoard.receiveAttack(generateAttack);
+
+    // If computer strikes a ship - it will send another attack, until it misses!
+    let attemptAttack = curPlayer.myBoard.receiveAttack(generateAttack);
+    while (attemptAttack === 0) {
+      let anotherAttack = this.props.computerAi.generateAttack();
+      attemptAttack = curPlayer.myBoard.receiveAttack(anotherAttack);
+    }
 
     this.props.handleAutoAttack(curPlayer);
     // Handle computer win
