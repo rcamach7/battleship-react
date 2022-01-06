@@ -4,52 +4,39 @@ import "../styles/playerGrids.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 class MainPlayer extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			player: props.player,
-			ships: [Ship("Yorktown", 6), Ship("Midway", 4), Ship("Tang", 2)],
-			shipsPlaced: 0,
-		};
-	}
-
 	handleNewMove(x, y) {
-		if (!this.state.gameStarted) {
+		if (!this.props.gameStarted) {
 			this.placeShip(x, y);
+		} else {
+			alert("Time to attack the enemy sir!");
 		}
 	}
 
 	placeShip(x, y) {
-		const curPlayer = this.state.player;
+		const curPlayer = this.props.player;
 		const placedShip = curPlayer.myBoard.placeShip(
-			this.state.ships[this.state.shipsPlaced],
+			this.props.ships[this.props.currentShip],
 			x,
 			y,
 			this.props.normalAxis
 		);
 
+		// Evaluate if we have succesfully placed a ship.
 		if (!placedShip) {
-			alert("Ship does not fit here");
+			alert("Ship does not fit here!");
 			return;
 		}
-		this.props.handleCurrentShip(this.state.shipsPlaced + 1);
-		this.setState({
-			player: curPlayer,
-			shipsPlaced: this.state.shipsPlaced + 1,
-		});
-		// Start game once we set all of our ships.
-		if (this.state.shipsPlaced === 2) {
-			this.setState({
-				gameStarted: true,
-				shipsPlaced: 2,
-			});
+		this.props.handleCurrentShip(this.props.currentShip + 1);
+
+		// Check if set-up is finished, if so, we start game.
+		if (this.props.currentShip === 2) {
 			this.props.handleGameStatus();
 			this.props.handleGameStatusCode(1);
 		}
 	}
 
 	generateBoard() {
-		const boardData = this.state.player.myBoard.playerBoard;
+		const boardData = this.props.player.myBoard.playerBoard;
 		const board = (
 			<div id="boardRow">
 				{boardData.map((row, rowKey) => {
@@ -75,7 +62,7 @@ class MainPlayer extends React.Component {
 	}
 
 	determineSymbol(x, y) {
-		const boardData = this.state.player.myBoard.playerBoard;
+		const boardData = this.props.player.myBoard.playerBoard;
 		if (boardData[x][y] === null) {
 			return <FontAwesomeIcon icon="water" size="1x" />;
 		} else if (boardData[x][y] === -1) {
@@ -156,13 +143,10 @@ class ComputerAi extends React.Component {
 		});
 
 		// Now that we have received an attack, it's our turn to send out an attack.
-		const curPlayer = this.state.player;
+		const curPlayer = this.props.player;
 		const generateAttack = this.state.computer.generateAttack();
 		curPlayer.myBoard.receiveAttack(generateAttack);
 
-		this.setState({
-			player: curPlayer,
-		});
 		this.props.handleAutoAttack(curPlayer);
 		// Handle computer win
 		if (curPlayer.myBoard.areShipsSunk()) {

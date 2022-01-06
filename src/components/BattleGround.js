@@ -66,6 +66,7 @@ class BattleGround extends React.Component {
 	}
 
 	render() {
+		// reduce the repetition of this.state
 		return (
 			<div className="BattleGround">
 				<p className="gameStatus">
@@ -81,18 +82,20 @@ class BattleGround extends React.Component {
 				)}
 				<div className="battleGround-battleBoard">
 					<MainPlayer
+						currentShip={this.state.currentShip}
+						ships={this.state.ships}
 						player={this.state.player}
 						gameStarted={this.state.gameStarted}
+						normalAxis={this.state.normalAxis}
 						handleGameStatus={() => this.handleGameStatus()}
 						handleCurrentShip={this.handleCurrentShip}
-						normalAxis={this.state.normalAxis}
 						handleGameStatusCode={this.handleGameStatusCode}
 					/>
 					<ComputerAi
 						computerAi={this.state.computerAi}
 						gameStarted={this.state.gameStarted}
 						player={this.state.player}
-						handleAutoAttack={() => this.handleAutoAttack()}
+						handleAutoAttack={this.handleAutoAttack}
 						handleGameStatusCode={this.handleGameStatusCode}
 					/>
 				</div>
