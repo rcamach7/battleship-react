@@ -85,66 +85,43 @@ class MainPlayer extends React.Component {
 }
 
 class ComputerAi extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			computer: props.computerAi,
-			player: props.player,
-		};
-	}
-
 	componentDidMount() {
-		const computerAISetup = this.state.computer;
+		// Set up japanese fleet
+		const computerAISetup = this.props.computerAi;
 
 		const ships = [Ship("Akagi", 6), Ship("Mikuma", 4), Ship("Yamato", 2)];
 		computerAISetup.myBoard.placeShip(ships[0], 0, 0, true);
 		computerAISetup.myBoard.placeShip(ships[1], 5, 3, true);
 		computerAISetup.myBoard.placeShip(ships[2], 7, 4, true);
 
-		this.setState({
-			computer: computerAISetup,
-		});
+		this.props.handleComputerChange(computerAISetup);
 	}
 
-	determineSymbol(x, y) {
-		const boardData = this.state.computer.myBoard.playerBoard;
-		if (boardData[x][y] === null) {
-			return <FontAwesomeIcon icon="water" size="1x" />;
-		} else if (boardData[x][y] === -1) {
-			return "";
-		} else if (boardData[x][y].isHitHere(x, y)) {
-			return <FontAwesomeIcon icon="bullseye" className="hit" size="1x" />;
-		} else {
-			return <FontAwesomeIcon icon="water" size="1x" />;
-		}
-	}
-
-	handleNewAttack(x, y) {
-		// Will not allow an attack unless game has been started.
+	receiveAttack(x, y) {
+		// Will not allow an attack unless game has been started or if attempting to striking a location already struck.
 		if (!this.props.gameStarted) {
 			return;
-		}
-		// Before sending an attack - make sure we aren't (as a player) attacking an area already struck.
-		const curComputer = this.state.computer;
-		if (curComputer.myBoard.isRepeatedAttack([x, y])) {
+		} else if (this.props.computerAi.myBoard.isRepeatedAttack([x, y])) {
 			return;
 		}
 
 		// Sends attack AND records if it hit a ship. Then, If it's a successful hit, we will ask the game board if all ships are sunk.
+		const curComputer = this.props.computerAi;
 		let attemptAttack = curComputer.myBoard.receiveAttack([x, y]);
 		if (attemptAttack === 0) {
-			// Handle player win
+			// Check if the successful attack has won the game.
 			if (curComputer.myBoard.areShipsSunk()) {
 				this.props.handleGameStatusCode(2);
 			}
 		}
-		this.setState({
-			computer: curComputer,
-		});
+		this.props.handleComputerChange(curComputer);
+		this.returnAttack();
+	}
 
+	returnAttack() {
 		// Now that we have received an attack, it's our turn to send out an attack.
 		const curPlayer = this.props.player;
-		const generateAttack = this.state.computer.generateAttack();
+		const generateAttack = this.props.computerAi.generateAttack();
 		curPlayer.myBoard.receiveAttack(generateAttack);
 
 		this.props.handleAutoAttack(curPlayer);
@@ -155,7 +132,7 @@ class ComputerAi extends React.Component {
 	}
 
 	generateBoard() {
-		const boardData = this.state.computer.myBoard.playerBoard;
+		const boardData = this.props.computerAi.myBoard.playerBoard;
 		const board = (
 			<div id="boardRow">
 				{boardData.map((row, rowKey) => {
@@ -166,7 +143,7 @@ class ComputerAi extends React.Component {
 									<div
 										key={colKey}
 										className="col computer-col"
-										onClick={() => this.handleNewAttack(rowKey, colKey)}
+										onClick={() => this.receiveAttack(rowKey, colKey)}
 									>
 										{this.determineSymbol(rowKey, colKey)}
 									</div>
@@ -178,6 +155,19 @@ class ComputerAi extends React.Component {
 			</div>
 		);
 		return board;
+	}
+
+	determineSymbol(x, y) {
+		const boardData = this.props.computerAi.myBoard.playerBoard;
+		if (boardData[x][y] === null) {
+			return <FontAwesomeIcon icon="water" size="1x" />;
+		} else if (boardData[x][y] === -1) {
+			return "";
+		} else if (boardData[x][y].isHitHere(x, y)) {
+			return <FontAwesomeIcon icon="bullseye" className="hit" size="1x" />;
+		} else {
+			return <FontAwesomeIcon icon="water" size="1x" />;
+		}
 	}
 
 	render() {
